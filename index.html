@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="周天的人力资源岗位求职个人主页，展示招聘运营、校园组织经历与公众号内容统筹作品。"
+      content="周天的人力资源岗位求职个人主页，展示招聘运营、数字化HR工作、公众号AI赋能的作品。"
     />
     <title>周天 | 人力资源求职作品集</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -16,6 +17,7 @@
     <header class="site-header" data-reveal>
       <a class="mark" href="#top" aria-label="回到首页">Portfolio</a>
       <nav class="nav" aria-label="主导航">
+        <a href="#hr-workflow">HR</a>
         <a href="#works">Works</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
@@ -29,25 +31,80 @@
           <div>
             <p class="candidate-name" data-reveal>周天</p>
             <h1 class="split-title" data-split>
-              个人
-              <span>主页</span>
+              HR求职
+              <span>个人主页</span>
             </h1>
           </div>
           <div class="hero-note" data-reveal>
             <figure class="profile-card">
               <img src="./assets/profile/zhou-tian-profile.jpg" alt="周天个人照片" />
-              <figcaption>西南大学应用心理学 / 人力资源方向</figcaption>
+              <figcaption>西南大学应用心理学</figcaption>
             </figure>
             <p>
-              面向人力资源岗位求职的个人主页。这里记录我的招聘运营实习、校园组织经历，以及在公众号内容统筹中积累的沟通、协调与信息整理能力。
+              面向人力资源实习岗位的求职主页。这里集中展示我在招聘流程协同、HR工作规范建设、校园新媒体运营与 AI 协作中的实践证据。
             </p>
-            <a class="text-link" href="#works">查看经历</a>
+            <a class="text-link" href="#hr-workflow">查看HR成果</a>
           </div>
         </div>
       </section>
 
       <section class="intro-line" aria-label="个人定位" data-reveal>
-        <p>招聘 · 候选人沟通 · 员工关系 · 公众号运营</p>
+        <p> 招聘沟通 · 数据看板 · 公众号运营 · AI协作</p>
+      </section>
+
+      <section id="hr-workflow" class="hr-workflow">
+        <div class="section-heading" data-reveal>
+          <p class="eyebrow">HR Workflow</p>
+          <h2>HR工作流程建设</h2>
+        </div>
+
+        <div class="workflow-grid">
+          <article class="workflow-card" data-reveal>
+            <button
+              class="workflow-visual"
+              type="button"
+              data-full="./assets/full/招聘看板.png"
+              data-title="招聘数据看板"
+            >
+              <img src="./assets/full/招聘看板.png" alt="基于企业微信智能表格搭建的招聘数据看板" loading="lazy" />
+            </button>
+            <div class="workflow-copy">
+              <span class="work-number">01</span>
+              <h3>招聘数据看板</h3>
+              <p>
+                基于企业微信智能表格搭建招聘数据看板，实现候选人台账、面试进度与 Offer 状态的自动汇总和可视化跟踪，并持续根据实际招聘流程迭代字段与视图。
+              </p>
+              <ul>
+                <li>招聘看板</li>
+                <li>面试台账</li>
+                <li>企微智能表格</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="workflow-card" data-reveal>
+            <button
+              class="workflow-visual"
+              type="button"
+              data-full="./assets/full/HR文档.png"
+              data-title="HR入职文档"
+            >
+              <img src="./assets/full/HR文档.png" alt="约 1.6 万字 HR 入职标准化流程文档" loading="lazy" />
+            </button>
+            <div class="workflow-copy">
+              <span class="work-number">02</span>
+              <h3>HR入职文档</h3>
+              <p>
+                总结实习期记录在 Obsidian 中的工作笔记，结合实习经验与 AI 工具，撰写约 1.6 万字 HR 经验文档，帮助新人快速理解岗位任务并沉淀标准化流程。
+              </p>
+              <ul>
+                <li>流程梳理</li>
+                <li>标准化文档</li>
+                <li>Obsidian + Claude Code</li>
+              </ul>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section id="works" class="works">
@@ -71,9 +128,9 @@
               <h3>课题组公众号运营 01</h3>
               <p>参与课题组论文内容整理与公众号发布，将研究信息转化为更清楚、易读的图文内容。</p>
               <ul>
-                <li>论文整理</li>
-                <li>内容转译</li>
-                <li>发布运营</li>
+                <li>内容整理</li>
+                <li>推文排版</li>
+                <li>公众号运营</li>
               </ul>
             </div>
           </article>
@@ -92,9 +149,9 @@
               <h3>课题组公众号运营 02</h3>
               <p>协助课题组公众号内容更新，完成资料筛选、重点提炼与推文视觉呈现。</p>
               <ul>
-                <li>资料筛选</li>
-                <li>重点提炼</li>
+                <li>内容整理</li>
                 <li>推文编辑</li>
+                <li>首图制作</li>
               </ul>
             </div>
           </article>
@@ -111,7 +168,7 @@
             <div class="work-copy">
               <span class="work-number">03</span>
               <h3>AI+公众号排版 03</h3>
-              <p>使用codex开发了一套自动化内容梳理与排版的工作流。</p>
+              <p>使用 Codex 实验性地搭建自动化内容梳理与排版工作流，提升长图推文的整理效率与版式一致性。</p>
               <ul>
                 <li>AI辅助</li>
                 <li>排版优化</li>
@@ -132,7 +189,7 @@
             <div class="work-copy">
               <span class="work-number">04</span>
               <h3>AI+公众号排版 04</h3>
-              <p>结合 AI 工具将文本内容生成为html，让长图内容更适合阅读与传播。</p>
+              <p>结合 AI 工具将文本内容生成为 HTML 长图，让推文信息更适合阅读与传播。</p>
               <ul>
                 <li>标题润色</li>
                 <li>图文编排</li>
@@ -165,18 +222,34 @@
       </section>
 
       <section id="about" class="about" data-reveal>
-        <p class="eyebrow">About</p>
+        <p class="eyebrow">About me</p>
         <div>
-          <h2>Less is More</h2>
-          <p>
-            我是周天，西南大学应用心理学研究生在读，求职方向为人力资源相关岗位。近期在重庆思创数智科技有限公司担任人力资源实习生，协助开展新媒体运营、教务咨询、教务助理等岗位招聘，参与 JD 优化、候选人邀约、初面跟进与入职衔接，累计电话沟通候选人 100+，参与初面 60+ 场。本科期间曾任团委学生会新媒体中心部长，统筹学院官方公众号“NNU 星语心院”内容生产与发布，累计参与推文 100+ 篇。批判性使用各类ai工具，使用codex搭建了公众号推文自动化排版的工作流，希望把心理学背景、沟通能力和创新能力带到 HR 工作中。
-          </p>
+          <h2>Less<br>is More</h2>
+
+          <div class="about-grid" aria-label="个人经历摘要">
+            <article>
+              <span>Education</span>
+              <p>西南大学应用心理学研究生在读，求职方向为人力资源实习岗。</p>
+            </article>
+            <article>
+              <span>Recruitment</span>
+              <p>在人力资源实习中参与 JD 优化、候选人邀约、初试复试跟进与入职衔接，并用智能表格根据招聘台账制作看板。</p>
+            </article>
+            <article>
+              <span>Content</span>
+              <p>曾统筹学院官方公众号“NNU 星语心院”内容生产与发布，累计参与推文 100+ 篇。</p>
+            </article>
+            <article>
+              <span>AI Workflow</span>
+              <p>批判性使用 AI 工具，尝试用 Codex、Claude Code 辅助文档整理、公众号排版与流程标准化。</p>
+            </article>
+          </div>
         </div>
       </section>
 
       <section id="contact" class="contact" data-reveal>
         <p class="eyebrow">Contact</p>
-        <h2>欢迎感兴趣的leader<br>与我取得联系。</h2>
+        <h2>欢迎感兴趣的BOSS<br>联系我</h2>
         <div class="contact-row">
           <a href="mailto:zt2693689898@163.com">邮箱：zt2693689898@163.com</a>
           <span>电话：18921969478（微信同号）</span>

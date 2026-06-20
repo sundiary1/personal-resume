@@ -12,6 +12,7 @@
 
 - 首页预览图放在 `assets/thumbs/`
 - 点击后打开的完整长图放在 `assets/full/`
+- HR 工作流程建设板块图片放在 `assets/full/招聘看板.png` 和 `assets/full/HR文档.png`
 - 个人照片放在 `assets/profile/`
 - 文件名目前是 `work-01.png` 到 `work-07.png`
 
