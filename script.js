@@ -117,11 +117,35 @@ viewer.addEventListener("close", () => {
   requestAnimationFrame(animate);
 })();
 
+/* ───── 轮播切换 ───── */
+(function carousel() {
+  const wrap = document.querySelector(".carousel-wrap");
+  if (!wrap) return;
+
+  const slides = Array.from(wrap.querySelectorAll(".carousel-slide"));
+  const prevBtn = wrap.querySelector(".carousel-prev");
+  const nextBtn = wrap.querySelector(".carousel-next");
+
+  if (!slides.length) return;
+
+  let current = slides.findIndex((s) => s.classList.contains("is-active"));
+  if (current < 0) current = 0;
+
+  function goTo(index) {
+    slides[current].classList.remove("is-active");
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add("is-active");
+  }
+
+  prevBtn.addEventListener("click", () => goTo(current - 1));
+  nextBtn.addEventListener("click", () => goTo(current + 1));
+})();
+
 /* ───── 卡片 3D 倾斜 ───── */
 (function cardTilt() {
   if (window.matchMedia("(pointer: coarse)").matches) return;
 
-  const cards = document.querySelectorAll(".workflow-visual, .work-image");
+  const cards = document.querySelectorAll(".workflow-visual, .work-image:not(.carousel-slide)");
   const MAX_TILT = 12;
 
   cards.forEach((card) => {
