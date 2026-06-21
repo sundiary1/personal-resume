@@ -141,67 +141,152 @@ viewer.addEventListener("close", () => {
   nextBtn.addEventListener("click", () => goTo(current + 1));
 })();
 
-/* ───── 椭圆无限轮播 ───── */
-(function showcaseCarousel() {
-  const track = document.querySelector(".showcase-track");
-  if (!track) return;
+/* ───── 弧形画廊 ───── */
+(function circularGallery() {
+  const gallery = document.querySelector(".circular-gallery");
+  if (!gallery) return;
 
-  const cards = Array.from(track.querySelectorAll(".showcase-card"));
-  const prevBtn = document.querySelector(".showcase-prev");
-  const nextBtn = document.querySelector(".showcase-next");
+  const cards = Array.from(gallery.querySelectorAll(".circular-card"));
   if (!cards.length) return;
 
-  const TOTAL = cards.length;
-  const VISIBLE = 5; // slots: -2, -1, 0 (center), +1, +2
-  const HALF = Math.floor(VISIBLE / 2); // 2
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const scroll = { current: 0, target: 0, last: 0 };
+  let spacing = 280;
+  let totalWidth = spacing * cards.length;
+  let isDragging = false;
+  let startX = 0;
+  let startTarget = 0;
+  let moved = false;
+  let suppressClickUntil = 0;
+  let pressedCard = null;
+  let rafId = null;
 
-  // position indices: which card goes into which slot
-  let slots = Array.from({ length: TOTAL }, (_, i) => i);
+  function wrapDelta(value) {
+    return ((value + totalWidth / 2) % totalWidth + totalWidth) % totalWidth - totalWidth / 2;
+  }
+
+  function measure() {
+    const styles = getComputedStyle(gallery);
+    const cardSize = parseFloat(styles.getPropertyValue("--gallery-card")) || cards[0].getBoundingClientRect().width;
+    const gap = parseFloat(styles.getPropertyValue("--gallery-gap")) || 28;
+    spacing = cardSize + gap;
+    totalWidth = spacing * cards.length;
+  }
 
   function render() {
-    cards.forEach((card, i) => {
-      const slotIdx = slots.indexOf(i);
-      const offset = slotIdx - HALF; // -2..0..+2
-      const dir = Math.sign(offset) || 1;
-      const count = Math.abs(offset);
+    const rect = gallery.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height * 0.48;
+    const edge = rect.width / 2 + spacing;
 
-      if (offset === 0) {
-        card.style.transform = "translateX(-50%)";
-      } else {
-        card.style.transform = `translateX(calc(-50% + ${dir} * (var(--card-size) + var(--card-gap)) * ${count}))`;
-      }
+    cards.forEach((card, index) => {
+      const delta = wrapDelta(index * spacing - scroll.current);
+      const normalized = Math.max(-1, Math.min(1, delta / Math.max(rect.width * 0.42, spacing)));
+      const distance = Math.abs(delta);
+      const arc = Math.pow(Math.abs(normalized), 2) * rect.height * 0.22;
+      const rotate = -normalized * 18;
+      const scale = 1 - Math.min(distance / edge, 1) * 0.2;
+      const visible = distance < edge;
 
-      const visible = Math.abs(offset) <= HALF;
-      card.style.opacity = visible ? "1" : "0";
+      card.style.transform = `translate(${centerX + delta - card.offsetWidth / 2}px, ${centerY + arc - card.offsetHeight / 2}px) rotate(${rotate}deg) scale(${scale})`;
+      card.style.opacity = visible ? String(1 - Math.min(distance / edge, 0.82)) : "0";
+      card.style.zIndex = String(100 - Math.round(distance));
+      card.style.filter = "";
+      card.style.boxShadow = "";
       card.style.pointerEvents = visible ? "auto" : "none";
       card.setAttribute("tabindex", visible ? "0" : "-1");
     });
   }
 
-  function next() {
-    // card wraps from visible-left to hidden-right — disable transition
-    const wrapCard = cards[slots[0]];
-    wrapCard.style.transition = "none";
-    slots.push(slots.shift());
+  function tick() {
+    const ease = prefersReducedMotion ? 1 : 0.075;
+    scroll.current += (scroll.target - scroll.current) * ease;
+
+    if (Math.abs(scroll.target - scroll.current) < 0.02) {
+      scroll.current = scroll.target;
+    }
+
     render();
-    wrapCard.offsetHeight;
-    wrapCard.style.transition = "";
+    scroll.last = scroll.current;
+    rafId = requestAnimationFrame(tick);
   }
 
-  function prev() {
-    // card wraps from hidden-right to visible-left — disable transition
-    const wrapCard = cards[slots[slots.length - 1]];
-    wrapCard.style.transition = "none";
-    slots.unshift(slots.pop());
-    render();
-    wrapCard.offsetHeight;
-    wrapCard.style.transition = "";
+  function snapToNearest() {
+    scroll.target = Math.round(scroll.target / spacing) * spacing;
   }
 
-  prevBtn.addEventListener("click", prev);
-  nextBtn.addEventListener("click", next);
+  gallery.addEventListener("pointerdown", (event) => {
+    isDragging = true;
+    moved = false;
+    pressedCard = event.target.closest(".circular-card");
+    startX = event.clientX;
+    startTarget = scroll.target;
+    gallery.setPointerCapture?.(event.pointerId);
+  });
 
+  gallery.addEventListener("pointermove", (event) => {
+    if (!isDragging) return;
+    const delta = event.clientX - startX;
+    if (Math.abs(delta) > 6) moved = true;
+    scroll.target = startTarget - delta * 1.15;
+  });
+
+  gallery.addEventListener("pointerup", (event) => {
+    if (!isDragging) return;
+    isDragging = false;
+    gallery.releasePointerCapture?.(event.pointerId);
+    if (moved) {
+      suppressClickUntil = performance.now() + 300;
+    } else if (pressedCard) {
+      suppressClickUntil = performance.now() + 300;
+      openViewer(pressedCard);
+    }
+    pressedCard = null;
+    moved = false;
+    snapToNearest();
+  });
+
+  gallery.addEventListener("pointercancel", () => {
+    isDragging = false;
+    moved = false;
+    pressedCard = null;
+  });
+
+  gallery.addEventListener("click", (event) => {
+    if (performance.now() > suppressClickUntil) return;
+    event.preventDefault();
+    event.stopPropagation();
+    suppressClickUntil = 0;
+  }, true);
+
+  gallery.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      scroll.target += spacing;
+      snapToNearest();
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      scroll.target -= spacing;
+      snapToNearest();
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      scroll.target = 0;
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    measure();
+    snapToNearest();
+    render();
+  });
+
+  measure();
   render();
+  tick();
 })();
 
 /* ───── 卡片 3D 倾斜 ───── */

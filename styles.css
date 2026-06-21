@@ -571,160 +571,137 @@ main {
   right: 10px;
 }
 
-/* ───── 椭圆无限轮播 ───── */
+/* ───── 弧形画廊 ───── */
 
 .showcase {
-  --card-size: 14vw;
-  --card-gap: 1.2vw;
-  --mask-w: 100vw;
   margin: 68px 0 60px;
   padding-top: 56px;
   border-top: 1px solid var(--line);
 }
 
-@media (max-width: 1280px) {
-  .showcase {
-    --card-size: 18vw;
-    --card-gap: 1.6vw;
-    --mask-w: 120vw;
-  }
-}
-
-@media (max-width: 980px) {
-  .showcase {
-    --card-size: 24vw;
-    --card-gap: 2vw;
-    --mask-w: 140vw;
-  }
-}
-
-@media (max-width: 600px) {
-  .showcase {
-    --card-size: 32vw;
-    --card-gap: 2.4vw;
-    --mask-w: 200vw;
-  }
-}
-
-@media (max-width: 480px) {
-  .showcase {
-    --card-size: 50vw;
-    --card-gap: 12px;
-    --mask-w: 280vw;
-  }
-}
-
-.showcase-carousel {
+.circular-gallery {
+  --gallery-card: clamp(170px, 18vw, 248px);
+  --gallery-gap: clamp(18px, 2vw, 34px);
   position: relative;
-  width: 100%;
-  height: calc(var(--card-size) / 0.72);
+  height: clamp(360px, 42vw, 540px);
+  margin: 0 calc(50% - 50vw) 32px;
   overflow: hidden;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='500' viewBox='0 0 1440 500'%3E%3Cpath fill='rgb(200,200,200)' fill-rule='evenodd' d='M0 0s275.04 100 720 100S1440 0 1440 0v500s-275.04-100-720-100S0 500 0 500V0z'/%3E%3C/svg%3E");
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='500' viewBox='0 0 1440 500'%3E%3Cpath fill='rgb(200,200,200)' fill-rule='evenodd' d='M0 0s275.04 100 720 100S1440 0 1440 0v500s-275.04-100-720-100S0 500 0 500V0z'/%3E%3C/svg%3E");
-  -webkit-mask-size: var(--mask-w) 100%;
-  mask-size: var(--mask-w) 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+  cursor: grab;
+  outline: none;
+  perspective: 1100px;
+  user-select: none;
+  touch-action: pan-y;
 }
 
-.showcase-track {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.showcase-card {
+.circular-gallery::before,
+.circular-gallery::after {
   position: absolute;
   top: 0;
-  left: 50%;
-  width: var(--card-size);
-  height: 100%;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.showcase-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.showcase-card:hover img {
-  transform: scale(1.04);
-}
-
-.showcase-card-label {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(45, 43, 40, 0.48);
-  color: #fffaf4;
-  text-align: center;
-  padding: 16px;
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  bottom: 0;
+  z-index: 4;
+  width: 18vw;
+  content: "";
   pointer-events: none;
 }
 
-.showcase-card:hover .showcase-card-label {
-  opacity: 1;
+.circular-gallery::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--paper), rgba(246, 241, 232, 0));
 }
 
-.showcase-card-label h4 {
-  margin: 0 0 6px;
-  font-size: clamp(14px, 1.4vw, 22px);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: inherit;
+.circular-gallery::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--paper), rgba(246, 241, 232, 0));
 }
 
-.showcase-card-label span {
-  font-family: "Segoe UI", sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  opacity: 0.7;
+.circular-gallery:active {
+  cursor: grabbing;
 }
 
-.showcase-controls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 24px;
+.circular-gallery:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 6px;
 }
 
-.showcase-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+.circular-track {
+  position: relative;
+  height: 100%;
+}
+
+.circular-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--gallery-card);
+  aspect-ratio: 0.72;
   padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: rgba(255, 250, 244, 0.82);
-  color: var(--ink);
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
-  backdrop-filter: blur(6px);
-}
-
-.showcase-arrow:hover {
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
   background: var(--white);
-  transform: scale(1.12);
+  box-shadow: 0 30px 76px rgba(68, 54, 42, 0.16);
+  cursor: zoom-in;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
 }
 
-.showcase-arrow svg {
-  width: 14px;
-  height: 14px;
+.circular-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+}
+
+.circular-card span {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 8px 10px;
+  background: rgba(45, 43, 40, 0.6);
+  color: var(--white);
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity 260ms ease, transform 260ms ease;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+.circular-card:hover span,
+.circular-card:focus-visible span {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.circular-card:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: -8px;
+}
+
+@media (max-width: 780px) {
+  .circular-gallery {
+    --gallery-card: clamp(142px, 48vw, 188px);
+    --gallery-gap: 18px;
+    height: 360px;
+    margin-right: calc(50% - 50vw);
+    margin-left: calc(50% - 50vw);
+  }
+
+  .circular-gallery::before,
+  .circular-gallery::after {
+    width: 14vw;
+  }
+
+  .circular-card span {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .showcase-details {
@@ -753,12 +730,6 @@ main {
   .showcase-details {
     grid-template-columns: 1fr;
     gap: 16px;
-  }
-}
-
-@media (pointer: coarse) {
-  .showcase-card-label {
-    display: none;
   }
 }
 
