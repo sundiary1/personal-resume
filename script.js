@@ -178,6 +178,7 @@ viewer.addEventListener("close", () => {
     const centerX = rect.width / 2;
     const centerY = rect.height * 0.48;
     const edge = rect.width / 2 + spacing;
+    const boostRange = spacing * 1.5;
 
     cards.forEach((card, index) => {
       const delta = wrapDelta(index * spacing - scroll.current);
@@ -185,7 +186,7 @@ viewer.addEventListener("close", () => {
       const distance = Math.abs(delta);
       const arc = Math.pow(Math.abs(normalized), 2) * rect.height * 0.22;
       const rotate = -normalized * 18;
-      const scale = 1 - Math.min(distance / edge, 1) * 0.2;
+      const scale = (1 - Math.min(distance / edge, 1) * 0.2) * (1 + 0.1 * Math.max(0, 1 - distance / boostRange));
       const visible = distance < edge;
 
       card.style.transform = `translate(${centerX + delta - card.offsetWidth / 2}px, ${centerY + arc - card.offsetHeight / 2}px) rotate(${rotate}deg) scale(${scale})`;
