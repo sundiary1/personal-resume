@@ -464,98 +464,49 @@ viewer.addEventListener("close", () => {
   document.body.classList.remove("viewer-open");
 });
 
-/* ───── 光标长草 ───── */
-(function cursorGrass() {
-  if (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+/* ───── 光标光晕 ───── */
+(function cursorGlow() {
+  const glow = document.createElement("div");
+  glow.className = "cursor-glow";
+  glow.setAttribute("aria-hidden", "true");
+  document.body.prepend(glow);
 
-  const greens = [
-    ["rgba(199, 213, 202, 0.94)", "rgba(125, 146, 131, 0.82)"],
-    ["rgba(178, 201, 171, 0.9)", "rgba(96, 126, 92, 0.78)"],
-    ["rgba(214, 219, 188, 0.88)", "rgba(132, 151, 101, 0.76)"],
-  ];
-  const MIN_DISTANCE = 16;
-  const BLADES_PER_PATCH = 3;
+  const SIZE = 920;
+  const HALF = SIZE / 2;
+  const EASING = 0.07;
 
-  let lastX = window.innerWidth / 2;
-  let lastY = window.innerHeight / 2;
-  let lastPatchTime = 0;
-  let isPointerDown = false;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let glowX = mouseX;
+  let glowY = mouseY;
 
-  function isTextSelectionCursor(event, target) {
-    if (target.closest?.("input, textarea, [contenteditable='true'], [contenteditable='']")) return true;
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
 
-    const caretPosition = document.caretPositionFromPoint?.(event.clientX, event.clientY);
-    if (caretPosition?.offsetNode?.nodeType === Node.TEXT_NODE) return true;
-
-    const caretRange = document.caretRangeFromPoint?.(event.clientX, event.clientY);
-    return caretRange?.startContainer?.nodeType === Node.TEXT_NODE;
-  }
-
-  function isArrowCursor(event) {
-    if (isPointerDown) return false;
-
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-    if (!target) return true;
-    if (isTextSelectionCursor(event, target)) return false;
-
-    const cursor = window.getComputedStyle(target).cursor;
-    return cursor === "auto" || cursor === "default";
-  }
-
-  function createBlade(x, y, index, baseAngle) {
-    const blade = document.createElement("span");
-    const palette = greens[Math.floor(Math.random() * greens.length)];
-    const offset = (index - 1) * 8 + (Math.random() - 0.5) * 10;
-    const angle = baseAngle + offset;
-    const height = 28 + Math.random() * 30;
-    const width = 2.5 + Math.random() * 2.8;
-
-    blade.className = "cursor-grass";
-    blade.setAttribute("aria-hidden", "true");
-    blade.style.setProperty("--grass-x", `${x + (Math.random() - 0.5) * 12}px`);
-    blade.style.setProperty("--grass-y", `${y + 8 + Math.random() * 8}px`);
-    blade.style.setProperty("--grass-width", `${width}px`);
-    blade.style.setProperty("--grass-height", `${height}px`);
-    blade.style.setProperty("--grass-angle", `${angle}deg`);
-    blade.style.setProperty("--grass-bend", `${(Math.random() - 0.5) * 24}deg`);
-    blade.style.setProperty("--grass-sway", `${(Math.random() - 0.5) * 18}px`);
-    blade.style.setProperty("--grass-tip", palette[0]);
-    blade.style.setProperty("--grass-root", palette[1]);
-    blade.style.setProperty("--leaf-angle", `${24 + Math.random() * 30}deg`);
-
-    document.body.append(blade);
-    blade.addEventListener("animationend", () => blade.remove(), { once: true });
-  }
-
-  document.addEventListener("mousemove", (event) => {
-    const dx = event.clientX - lastX;
-    const dy = event.clientY - lastY;
-    const distance = Math.hypot(dx, dy);
-    const now = performance.now();
-
-    if (distance < MIN_DISTANCE || now - lastPatchTime < 38 || !isArrowCursor(event)) return;
-
-    const baseAngle = -8 + (Math.atan2(dy, dx) * 8) / Math.PI;
-    for (let i = 0; i < BLADES_PER_PATCH; i += 1) {
-      createBlade(event.clientX, event.clientY, i, baseAngle);
+    if (!glow.classList.contains("is-active")) {
+      glow.classList.add("is-active");
     }
+  });
 
-    lastX = event.clientX;
-    lastY = event.clientY;
-    lastPatchTime = now;
-  }, { passive: true });
+  document.addEventListener("mouseleave", () => {
+    glow.classList.remove("is-active");
+  });
 
-  document.addEventListener("pointerdown", () => {
-    isPointerDown = true;
-  }, { passive: true });
+  function animate() {
+    const dx = mouseX - glowX;
+    const dy = mouseY - glowY;
 
-  document.addEventListener("pointerup", () => {
-    isPointerDown = false;
-  }, { passive: true });
+    // 越远越快，越近越慢 —— 营造"惯性跟随"手感
+    glowX += dx * (EASING + Math.abs(dx) * 0.00008);
+    glowY += dy * (EASING + Math.abs(dy) * 0.00008);
 
-  document.addEventListener("pointercancel", () => {
-    isPointerDown = false;
-  }, { passive: true });
+    glow.style.transform = `translate(${glowX - HALF}px, ${glowY - HALF}px)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
 })();
 
 /* ───── 轮播切换 ───── */
