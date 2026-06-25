@@ -18,6 +18,53 @@ if ("IntersectionObserver" in window) {
   revealTargets.forEach((target) => target.classList.add("is-visible"));
 }
 
+const sectionBands = Array.from(document.querySelectorAll("[data-section]"));
+
+if ("IntersectionObserver" in window) {
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-section-visible");
+        }
+      });
+    },
+    { rootMargin: "-12% 0px -18% 0px", threshold: 0.08 }
+  );
+
+  sectionBands.forEach((section) => sectionObserver.observe(section));
+} else {
+  sectionBands.forEach((section) => section.classList.add("is-section-visible"));
+}
+
+(function sectionParallax() {
+  if (!sectionBands.length || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let ticking = false;
+
+  function update() {
+    sectionBands.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      const viewportMiddle = window.innerHeight / 2;
+      const sectionMiddle = rect.top + rect.height / 2;
+      const distance = (sectionMiddle - viewportMiddle) / Math.max(window.innerHeight, 1);
+      const shift = Math.max(-18, Math.min(18, distance * -22));
+      section.style.setProperty("--section-shift", `${shift.toFixed(2)}px`);
+    });
+    ticking = false;
+  }
+
+  function requestUpdate() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }
+
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  update();
+})();
+
 document.querySelectorAll("[data-split]").forEach((element) => {
   const text = element.textContent.replace(/\n\s*/g, "\n").trim();
   element.textContent = "";
@@ -35,6 +82,351 @@ document.querySelectorAll("[data-split]").forEach((element) => {
     element.appendChild(span);
   });
 });
+
+/* ----- FallingText hero ----- */
+(function fallingTextHero() {
+  const container = document.querySelector("[data-falling-text]");
+  const target = container?.querySelector(".falling-text-target");
+  const canvasContainer = container?.querySelector(".falling-text-canvas");
+  const resetButton = document.querySelector("[data-reset-falling-text]");
+
+  if (!container || !target || !canvasContainer || !resetButton) return;
+
+  const originalHTML = target.innerHTML;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let cleanup = null;
+
+  function resetText() {
+    cleanup?.();
+    cleanup = null;
+    container.classList.remove("is-falling");
+    canvasContainer.replaceChildren();
+    target.innerHTML = originalHTML;
+    target.removeAttribute("aria-hidden");
+    target.querySelectorAll(".word").forEach((word) => {
+      word.removeAttribute("style");
+    });
+  }
+
+  function startFalling() {
+    if (cleanup || prefersReducedMotion || !window.Matter) return;
+
+    const { Engine, Render, World, Bodies, Runner, Mouse, MouseConstraint, Body } = window.Matter;
+    const rect = container.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+
+    if (width <= 0 || height <= 0) return;
+
+    container.classList.add("is-falling");
+
+    const engine = Engine.create();
+    engine.world.gravity.y = 1.2;
+
+    const render = Render.create({
+      element: canvasContainer,
+      engine,
+      options: {
+        width,
+        height,
+        background: "transparent",
+        wireframes: false,
+      },
+    });
+
+    render.canvas.style.width = "100%";
+    render.canvas.style.height = "100%";
+
+    const boundaryOptions = {
+      isStatic: true,
+      render: { fillStyle: "transparent" },
+    };
+    const floor = Bodies.rectangle(width / 2, height + 26, width, 52, boundaryOptions);
+    const leftWall = Bodies.rectangle(-26, height / 2, 52, height, boundaryOptions);
+    const rightWall = Bodies.rectangle(width + 26, height / 2, 52, height, boundaryOptions);
+    const ceiling = Bodies.rectangle(width / 2, -26, width, 52, boundaryOptions);
+
+    const wordBodies = Array.from(target.querySelectorAll(".word")).map((word) => {
+      const wordRect = word.getBoundingClientRect();
+      const x = wordRect.left - rect.left + wordRect.width / 2;
+      const y = wordRect.top - rect.top + wordRect.height / 2;
+      const body = Bodies.rectangle(x, y, wordRect.width, wordRect.height, {
+        restitution: 0.72,
+        frictionAir: 0.012,
+        friction: 0.22,
+        render: { fillStyle: "transparent" },
+      });
+
+      Body.setVelocity(body, {
+        x: (Math.random() - 0.5) * 5,
+        y: -Math.random() * 2,
+      });
+      Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
+
+      word.style.position = "absolute";
+      word.style.left = `${x}px`;
+      word.style.top = `${y}px`;
+      word.style.margin = "0";
+      word.style.transform = "translate(-50%, -50%)";
+
+      return { word, body };
+    });
+
+    const mouse = Mouse.create(container);
+    const mouseConstraint = MouseConstraint.create(engine, {
+      mouse,
+      constraint: {
+        stiffness: 1.35,
+        render: { visible: false },
+      },
+    });
+    render.mouse = mouse;
+
+    World.add(engine.world, [
+      floor,
+      leftWall,
+      rightWall,
+      ceiling,
+      mouseConstraint,
+      ...wordBodies.map(({ body }) => body),
+    ]);
+
+    const runner = Runner.create();
+    Runner.run(runner, engine);
+    Render.run(render);
+
+    let animationId = null;
+    function updateWords() {
+      wordBodies.forEach(({ word, body }) => {
+        word.style.left = `${body.position.x}px`;
+        word.style.top = `${body.position.y}px`;
+        word.style.transform = `translate(-50%, -50%) rotate(${body.angle}rad)`;
+      });
+      animationId = requestAnimationFrame(updateWords);
+    }
+    updateWords();
+
+    cleanup = () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      Render.stop(render);
+      Runner.stop(runner);
+      render.canvas?.remove();
+      World.clear(engine.world, false);
+      Engine.clear(engine);
+    };
+  }
+
+  container.addEventListener("click", startFalling);
+  container.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      startFalling();
+    }
+  });
+  resetButton.addEventListener("click", resetText);
+  window.addEventListener("resize", () => {
+    if (cleanup) resetText();
+  });
+})();
+
+/* ----- CardNav ----- */
+(function cardNav() {
+  const container = document.querySelector(".card-nav-container");
+  const nav = document.querySelector(".card-nav");
+  const menuButton = document.querySelector(".hamburger-menu");
+  const content = document.querySelector(".card-nav-content");
+  const cards = Array.from(document.querySelectorAll(".nav-card"));
+  const links = Array.from(document.querySelectorAll(".nav-card-link"));
+
+  if (!container || !nav || !menuButton || !content) return;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasMousePointer = window.matchMedia("(pointer: fine)").matches;
+  let isExpanded = false;
+  let isPointerNearNav = true;
+  let hideTimer = null;
+  let timeline = null;
+
+  function updateNavVisibility() {
+    const shouldHide = hasMousePointer && !isExpanded && !isPointerNearNav && !container.matches(":focus-within");
+    container.classList.toggle("is-hidden", shouldHide);
+  }
+
+  function scheduleInitialHide() {
+    if (!hasMousePointer) return;
+    window.clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => {
+      isPointerNearNav = false;
+      updateNavVisibility();
+    }, 1800);
+  }
+
+  function calculateHeight() {
+    const isMobile = window.matchMedia("(max-width: 780px)").matches;
+    if (!isMobile) return 260;
+
+    const previous = {
+      visibility: content.style.visibility,
+      pointerEvents: content.style.pointerEvents,
+      position: content.style.position,
+      height: content.style.height,
+    };
+
+    content.style.visibility = "visible";
+    content.style.pointerEvents = "auto";
+    content.style.position = "static";
+    content.style.height = "auto";
+
+    const topBar = 60;
+    const padding = 16;
+    const contentHeight = content.scrollHeight;
+
+    content.style.visibility = previous.visibility;
+    content.style.pointerEvents = previous.pointerEvents;
+    content.style.position = previous.position;
+    content.style.height = previous.height;
+
+    return topBar + contentHeight + padding;
+  }
+
+  function setExpandedState(expanded) {
+    isExpanded = expanded;
+    nav.classList.toggle("open", expanded);
+    menuButton.classList.toggle("open", expanded);
+    menuButton.setAttribute("aria-expanded", String(expanded));
+    menuButton.setAttribute("aria-label", expanded ? "关闭菜单" : "打开菜单");
+    content.setAttribute("aria-hidden", String(!expanded));
+    links.forEach((link) => {
+      link.tabIndex = expanded ? 0 : -1;
+    });
+    updateNavVisibility();
+  }
+
+  function createTimeline() {
+    if (!window.gsap || prefersReducedMotion) return null;
+
+    window.gsap.set(nav, { height: 60, overflow: "hidden" });
+    window.gsap.set(cards, { y: 50, opacity: 0 });
+
+    const nextTimeline = window.gsap.timeline({ paused: true });
+    nextTimeline.to(nav, {
+      height: calculateHeight,
+      duration: 0.4,
+      ease: "power3.out",
+    });
+    nextTimeline.to(
+      cards,
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.4,
+        ease: "power3.out",
+        stagger: 0.08,
+      },
+      "-=0.1"
+    );
+
+    return nextTimeline;
+  }
+
+  function rebuildTimeline() {
+    timeline?.kill();
+    timeline = createTimeline();
+    if (isExpanded) {
+      if (timeline) {
+        timeline.progress(1);
+      } else {
+        nav.style.height = `${calculateHeight()}px`;
+      }
+    }
+  }
+
+  function openMenu() {
+    setExpandedState(true);
+    if (timeline) {
+      timeline.play(0);
+    } else {
+      nav.style.height = `${calculateHeight()}px`;
+      cards.forEach((card) => {
+        card.style.opacity = "1";
+        card.style.transform = "translateY(0)";
+      });
+    }
+  }
+
+  function closeMenu() {
+    menuButton.classList.remove("open");
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "打开菜单");
+
+    if (timeline) {
+      timeline.eventCallback("onReverseComplete", () => {
+        setExpandedState(false);
+      });
+      timeline.reverse();
+      return;
+    }
+
+    nav.style.height = "60px";
+    setExpandedState(false);
+  }
+
+  function toggleMenu() {
+    if (isExpanded) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
+
+  menuButton.addEventListener("click", toggleMenu);
+  menuButton.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleMenu();
+    }
+  });
+
+  links.forEach((link) => {
+    link.addEventListener("click", () => closeMenu());
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isExpanded) closeMenu();
+  });
+
+  document.addEventListener("mousemove", (event) => {
+    if (!hasMousePointer) return;
+    isPointerNearNav = event.clientY <= 132 || container.matches(":hover");
+    updateNavVisibility();
+  });
+
+  container.addEventListener("mouseenter", () => {
+    isPointerNearNav = true;
+    updateNavVisibility();
+  });
+
+  container.addEventListener("mouseleave", (event) => {
+    if (!hasMousePointer) return;
+    isPointerNearNav = event.clientY <= 132;
+    updateNavVisibility();
+  });
+
+  container.addEventListener("focusin", () => {
+    isPointerNearNav = true;
+    updateNavVisibility();
+  });
+
+  container.addEventListener("focusout", () => {
+    window.setTimeout(updateNavVisibility, 0);
+  });
+
+  window.addEventListener("resize", rebuildTimeline);
+
+  setExpandedState(false);
+  timeline = createTimeline();
+  scheduleInitialHide();
+})();
 
 const viewer = document.querySelector(".viewer");
 const viewerImage = document.querySelector("#viewerImage");
@@ -72,49 +464,98 @@ viewer.addEventListener("close", () => {
   document.body.classList.remove("viewer-open");
 });
 
-/* ───── 光标光晕 ───── */
-(function cursorGlow() {
-  const glow = document.createElement("div");
-  glow.className = "cursor-glow";
-  glow.setAttribute("aria-hidden", "true");
-  document.body.prepend(glow);
+/* ───── 光标长草 ───── */
+(function cursorGrass() {
+  if (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  const SIZE = 920;
-  const HALF = SIZE / 2;
-  const EASING = 0.07;
+  const greens = [
+    ["rgba(199, 213, 202, 0.94)", "rgba(125, 146, 131, 0.82)"],
+    ["rgba(178, 201, 171, 0.9)", "rgba(96, 126, 92, 0.78)"],
+    ["rgba(214, 219, 188, 0.88)", "rgba(132, 151, 101, 0.76)"],
+  ];
+  const MIN_DISTANCE = 16;
+  const BLADES_PER_PATCH = 3;
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let glowX = mouseX;
-  let glowY = mouseY;
+  let lastX = window.innerWidth / 2;
+  let lastY = window.innerHeight / 2;
+  let lastPatchTime = 0;
+  let isPointerDown = false;
 
-  document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+  function isTextSelectionCursor(event, target) {
+    if (target.closest?.("input, textarea, [contenteditable='true'], [contenteditable='']")) return true;
 
-    if (!glow.classList.contains("is-active")) {
-      glow.classList.add("is-active");
-    }
-  });
+    const caretPosition = document.caretPositionFromPoint?.(event.clientX, event.clientY);
+    if (caretPosition?.offsetNode?.nodeType === Node.TEXT_NODE) return true;
 
-  document.addEventListener("mouseleave", () => {
-    glow.classList.remove("is-active");
-  });
-
-  function animate() {
-    const dx = mouseX - glowX;
-    const dy = mouseY - glowY;
-
-    // 越远越快，越近越慢 —— 营造"惯性跟随"手感
-    glowX += dx * (EASING + Math.abs(dx) * 0.00008);
-    glowY += dy * (EASING + Math.abs(dy) * 0.00008);
-
-    glow.style.transform = `translate(${glowX - HALF}px, ${glowY - HALF}px)`;
-
-    requestAnimationFrame(animate);
+    const caretRange = document.caretRangeFromPoint?.(event.clientX, event.clientY);
+    return caretRange?.startContainer?.nodeType === Node.TEXT_NODE;
   }
 
-  requestAnimationFrame(animate);
+  function isArrowCursor(event) {
+    if (isPointerDown) return false;
+
+    const target = document.elementFromPoint(event.clientX, event.clientY);
+    if (!target) return true;
+    if (isTextSelectionCursor(event, target)) return false;
+
+    const cursor = window.getComputedStyle(target).cursor;
+    return cursor === "auto" || cursor === "default";
+  }
+
+  function createBlade(x, y, index, baseAngle) {
+    const blade = document.createElement("span");
+    const palette = greens[Math.floor(Math.random() * greens.length)];
+    const offset = (index - 1) * 8 + (Math.random() - 0.5) * 10;
+    const angle = baseAngle + offset;
+    const height = 28 + Math.random() * 30;
+    const width = 2.5 + Math.random() * 2.8;
+
+    blade.className = "cursor-grass";
+    blade.setAttribute("aria-hidden", "true");
+    blade.style.setProperty("--grass-x", `${x + (Math.random() - 0.5) * 12}px`);
+    blade.style.setProperty("--grass-y", `${y + 8 + Math.random() * 8}px`);
+    blade.style.setProperty("--grass-width", `${width}px`);
+    blade.style.setProperty("--grass-height", `${height}px`);
+    blade.style.setProperty("--grass-angle", `${angle}deg`);
+    blade.style.setProperty("--grass-bend", `${(Math.random() - 0.5) * 24}deg`);
+    blade.style.setProperty("--grass-sway", `${(Math.random() - 0.5) * 18}px`);
+    blade.style.setProperty("--grass-tip", palette[0]);
+    blade.style.setProperty("--grass-root", palette[1]);
+    blade.style.setProperty("--leaf-angle", `${24 + Math.random() * 30}deg`);
+
+    document.body.append(blade);
+    blade.addEventListener("animationend", () => blade.remove(), { once: true });
+  }
+
+  document.addEventListener("mousemove", (event) => {
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+    const distance = Math.hypot(dx, dy);
+    const now = performance.now();
+
+    if (distance < MIN_DISTANCE || now - lastPatchTime < 38 || !isArrowCursor(event)) return;
+
+    const baseAngle = -8 + (Math.atan2(dy, dx) * 8) / Math.PI;
+    for (let i = 0; i < BLADES_PER_PATCH; i += 1) {
+      createBlade(event.clientX, event.clientY, i, baseAngle);
+    }
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastPatchTime = now;
+  }, { passive: true });
+
+  document.addEventListener("pointerdown", () => {
+    isPointerDown = true;
+  }, { passive: true });
+
+  document.addEventListener("pointerup", () => {
+    isPointerDown = false;
+  }, { passive: true });
+
+  document.addEventListener("pointercancel", () => {
+    isPointerDown = false;
+  }, { passive: true });
 })();
 
 /* ───── 轮播切换 ───── */
@@ -158,8 +599,13 @@ viewer.addEventListener("close", () => {
   let startTarget = 0;
   let moved = false;
   let suppressClickUntil = 0;
-  let pressedCard = null;
+  let pendingClickCard = null;
   let rafId = null;
+  let isPointerInside = false;
+  let isKeyboardFocusInside = false;
+  let lastFrameTime = performance.now();
+
+  const AUTO_ROTATE_SECONDS_PER_CARD = 4.6;
 
   function wrapDelta(value) {
     return ((value + totalWidth / 2) % totalWidth + totalWidth) % totalWidth - totalWidth / 2;
@@ -186,7 +632,7 @@ viewer.addEventListener("close", () => {
       const distance = Math.abs(delta);
       const arc = Math.pow(Math.abs(normalized), 2) * rect.height * 0.22;
       const rotate = -normalized * 18;
-      const scale = (1 - Math.min(distance / edge, 1) * 0.2) * (1 + 0.1 * Math.max(0, 1 - distance / boostRange));
+      const scale = (1 - Math.min(distance / edge, 1) * 0.2) * (1 + 0.3 * Math.max(0, 1 - distance / boostRange));
       const visible = distance < edge;
 
       card.style.transform = `translate(${centerX + delta - card.offsetWidth / 2}px, ${centerY + arc - card.offsetHeight / 2}px) rotate(${rotate}deg) scale(${scale})`;
@@ -200,6 +646,14 @@ viewer.addEventListener("close", () => {
   }
 
   function tick() {
+    const now = performance.now();
+    const deltaSeconds = Math.min((now - lastFrameTime) / 1000, 0.08);
+    lastFrameTime = now;
+
+    if (shouldAutoRotate()) {
+      scroll.target += (spacing / AUTO_ROTATE_SECONDS_PER_CARD) * deltaSeconds;
+    }
+
     const ease = prefersReducedMotion ? 1 : 0.075;
     scroll.current += (scroll.target - scroll.current) * ease;
 
@@ -216,12 +670,32 @@ viewer.addEventListener("close", () => {
     scroll.target = Math.round(scroll.target / spacing) * spacing;
   }
 
+  function settleAtNearest() {
+    snapToNearest();
+    if (prefersReducedMotion) {
+      scroll.current = scroll.target;
+      render();
+    }
+  }
+
+  function shouldAutoRotate() {
+    return (
+      !prefersReducedMotion &&
+      !isDragging &&
+      !isPointerInside &&
+      !isKeyboardFocusInside &&
+      !document.body.classList.contains("viewer-open") &&
+      document.visibilityState === "visible"
+    );
+  }
+
   gallery.addEventListener("pointerdown", (event) => {
     isDragging = true;
     moved = false;
-    pressedCard = event.target.closest(".circular-card");
+    pendingClickCard = event.target.closest(".circular-card");
     startX = event.clientX;
     startTarget = scroll.target;
+    scroll.current = scroll.target;
     gallery.setPointerCapture?.(event.pointerId);
   });
 
@@ -234,30 +708,62 @@ viewer.addEventListener("close", () => {
 
   gallery.addEventListener("pointerup", (event) => {
     if (!isDragging) return;
+    const wasDragged = moved;
     isDragging = false;
     gallery.releasePointerCapture?.(event.pointerId);
-    if (moved) {
+    if (wasDragged) {
       suppressClickUntil = performance.now() + 300;
-    } else if (pressedCard) {
+      settleAtNearest();
+    } else if (pendingClickCard) {
       suppressClickUntil = performance.now() + 300;
-      openViewer(pressedCard);
+      openViewer(pendingClickCard);
+      pendingClickCard = null;
     }
-    pressedCard = null;
     moved = false;
-    snapToNearest();
   });
 
   gallery.addEventListener("pointercancel", () => {
     isDragging = false;
     moved = false;
-    pressedCard = null;
+    pendingClickCard = null;
+    settleAtNearest();
+  });
+
+  gallery.addEventListener("pointerenter", () => {
+    isPointerInside = true;
+    settleAtNearest();
+  });
+
+  gallery.addEventListener("pointerleave", () => {
+    isPointerInside = false;
+  });
+
+  gallery.addEventListener("focusin", () => {
+    isKeyboardFocusInside = true;
+    settleAtNearest();
+  });
+
+  gallery.addEventListener("focusout", () => {
+    isKeyboardFocusInside = gallery.contains(document.activeElement);
   });
 
   gallery.addEventListener("click", (event) => {
-    if (performance.now() > suppressClickUntil) return;
+    const card = event.target.closest(".circular-card") || pendingClickCard;
+
+    if (performance.now() <= suppressClickUntil) {
+      event.preventDefault();
+      event.stopPropagation();
+      pendingClickCard = null;
+      suppressClickUntil = 0;
+      return;
+    }
+
+    if (!card) return;
+
     event.preventDefault();
     event.stopPropagation();
-    suppressClickUntil = 0;
+    pendingClickCard = null;
+    openViewer(card);
   }, true);
 
   gallery.addEventListener("keydown", (event) => {

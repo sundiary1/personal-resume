@@ -14,45 +14,126 @@
   <body>
     <div class="grain" aria-hidden="true"></div>
 
-    <header class="site-header" data-reveal>
-      <a class="mark" href="#top" aria-label="回到首页">Portfolio</a>
-      <nav class="nav" aria-label="主导航">
-        <a href="#hr-workflow">HR Workflow</a>
-        <a href="#works">Public Account</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
+    <div class="card-nav-container">
+      <nav class="card-nav" aria-label="主导航" style="background-color: var(--white)">
+        <div class="card-nav-top">
+          <button class="hamburger-menu" type="button" aria-label="打开菜单" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </button>
+
+          <a class="logo-container" href="#top" aria-label="回到首页">
+            <img src="./assets/favicon.svg" alt="周天个人主页 Logo" class="logo" />
+            <span>Portfolio</span>
+          </a>
+
+          <a class="card-nav-cta-button" href="#contact">联系我</a>
+        </div>
+
+        <div class="card-nav-content" aria-hidden="true">
+          <section class="nav-card" style="background-color: #2d2b28; color: #fffaf4">
+            <div class="nav-card-label">HR Workflow</div>
+            <div class="nav-card-links">
+              <a class="nav-card-link" href="#hr-workflow" aria-label="查看 HR 工作流程建设">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                招聘流程建设
+              </a>
+              <a class="nav-card-link" href="#hr-workflow" aria-label="查看招聘数据看板">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                数据看板
+              </a>
+            </div>
+          </section>
+
+          <section class="nav-card" style="background-color: #7d9283; color: #fffaf4">
+            <div class="nav-card-label">Works</div>
+            <div class="nav-card-links">
+              <a class="nav-card-link" href="#works" aria-label="查看公众号排版作品">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                公众号排版
+              </a>
+              <a class="nav-card-link" href="#works" aria-label="查看 AI 协作案例">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                AI 协作案例
+              </a>
+            </div>
+          </section>
+
+          <section class="nav-card" style="background-color: #a96f5b; color: #fffaf4">
+            <div class="nav-card-label">Profile</div>
+            <div class="nav-card-links">
+              <a class="nav-card-link" href="#about" aria-label="了解个人经历">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                关于我
+              </a>
+              <a class="nav-card-link" href="#contact" aria-label="联系周天">
+                <span class="nav-card-link-icon" aria-hidden="true">↗</span>
+                联系方式
+              </a>
+            </div>
+          </section>
+        </div>
       </nav>
-    </header>
+    </div>
 
     <main id="top">
       <section class="hero">
-        <p class="eyebrow" data-reveal>Human Resources / Recruitment Operation</p>
         <div class="hero-grid">
-          <div>
-            <p class="candidate-name" data-reveal>周天</p>
-            <h1 class="split-title" data-split>
-              求职
-              <span>个人主页</span>
-            </h1>
+          <div class="hero-copy">
+            <div
+              class="falling-text-container"
+              data-falling-text
+              tabindex="0"
+              role="button"
+              aria-label="触发标题文字下落效果"
+            >
+              <h1 class="falling-text-target">
+                <span class="word word-name">周天</span>
+                <span class="word">西南大学</span>
+                <span class="word highlighted">心理学</span>
+                <span class="word">招聘</span>
+                <i class="word-br" aria-hidden="true"></i>
+                <span class="word">候选人沟通</span>
+                <span class="word highlighted">JD优化</span>
+                <span class="word">简历筛选</span>
+                <i class="word-br" aria-hidden="true"></i>
+                <span class="word">电话邀约</span>
+                <span class="word highlighted">初面跟进</span>
+                <span class="word">入职衔接</span>
+                <i class="word-br" aria-hidden="true"></i>
+                <span class="word highlighted">AI提效</span>
+                <span class="word">数据台账</span>
+                <span class="word">新媒体运营</span>
+                <i class="word-br" aria-hidden="true"></i>
+                <span class="word">内容表达</span>
+                <span class="word highlighted">沟通协调</span>
+                <span class="word">执行力</span>
+                <i class="word-br" aria-hidden="true"></i>
+                <span class="word highlighted">学习能力</span>
+                <span class="word">抗压</span>
+                <span class="word">适应</span>
+                <span class="word">学习</span>
+                <span class="word">claude code</span>
+                <span class="word">codex</span>
+              </h1>
+              <div class="falling-text-canvas" aria-hidden="true"></div>
+            </div>
           </div>
           <div class="hero-note" data-reveal>
             <figure class="profile-card">
-              <img src="./assets/profile/zhou-tian-profile.jpg" alt="周天个人照片" />
-              <figcaption>西南大学应用心理学</figcaption>
+              <button class="profile-card-button" type="button" data-reset-falling-text aria-label="还原标题文字">
+                <img src="./assets/profile/zhou-tian-profile.jpg" alt="周天个人照片" />
+              </button>
             </figure>
-            <p>
-              个人主页集中展示我在招聘流程协同、HR工作规范建设、校园新媒体运营与 AI 协作中的真实产出。
+            <p class="hero-description">
+              点击文字可交互，点击头像还原~
             </p>
-            <a class="text-link" href="#hr-workflow">查看相关经历</a>
+            <a class="text-link" href="#hr-workflow">下一页</a>
           </div>
         </div>
       </section>
 
-      <section class="intro-line" aria-label="个人定位" data-reveal>
-        <p> 招聘沟通 · 数据看板 · 公众号运营 · AI协作</p>
-      </section>
-
-      <section id="hr-workflow" class="hr-workflow">
+      <section id="hr-workflow" class="hr-workflow section-band section-band-hr" data-section>
         <div class="section-heading" data-reveal>
           <p class="eyebrow">HR Workflow</p>
           <h2>HR工作流程建设</h2>
@@ -104,10 +185,33 @@
               </ul>
             </div>
           </article>
+
+          <article class="workflow-card" data-reveal>
+            <button
+              class="workflow-visual"
+              type="button"
+              data-full="./assets/full/openclaw-agent.png"
+              data-title="OpenClaw 智能体"
+            >
+              <img src="./assets/full/openclaw-agent.png" alt="基于 OpenClaw 和 DeepSeek API 搭建并在本地运行成功的智能体" loading="lazy" />
+            </button>
+            <div class="workflow-copy">
+              <span class="work-number">03</span>
+              <h3>OpenClaw智能体</h3>
+              <p>
+                基于 OpenClaw 和 DeepSeek API 搭建本地智能体，并完成运行验证；用于探索 HR 工作场景中的消息问答、任务协助与多工具调用能力。
+              </p>
+              <ul>
+                <li>OpenClaw</li>
+                <li>DeepSeek API</li>
+                <li>本地运行验证</li>
+              </ul>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section id="works" class="works">
+      <section id="works" class="works section-band section-band-works" data-section>
         <div class="section-heading" data-reveal>
           <p class="eyebrow">Selected Evidence</p>
           <h2>公众号排版及AI协作</h2>
@@ -212,7 +316,7 @@
         </div>
       </section>
 
-      <section id="about" class="about" data-reveal>
+      <section id="about" class="about section-band section-band-about" data-section data-reveal>
         <p class="eyebrow">About me</p>
         <div>
           <h2>Less<br>is More</h2>
@@ -220,7 +324,7 @@
           <div class="about-grid" aria-label="个人经历摘要">
             <article>
               <span>Education</span>
-              <p>西南大学应用心理学研究生在读，愿意不断学习、思考。</p>
+              <p>西南大学应用心理学研究生在读，喜欢记笔记、总结，知道自己有很多不足，愿意不断学习。</p>
             </article>
             <article>
               <span>Recruitment</span>
@@ -238,9 +342,9 @@
         </div>
       </section>
 
-      <section id="contact" class="contact" data-reveal>
+      <section id="contact" class="contact section-band section-band-contact" data-section data-reveal>
         <p class="eyebrow">Contact</p>
-        <h2>欢迎感兴趣的BOSS<br>联系我</h2>
+        <h2>感谢观看！</h2>
         <div class="contact-row">
           <a href="mailto:zt2693689898@163.com">邮箱：zt2693689898@163.com</a>
           <span>电话：18921969478（微信同号）</span>
@@ -263,6 +367,8 @@
       </div>
     </dialog>
 
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
