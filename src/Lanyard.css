@@ -1,0 +1,9 @@
+.lanyard-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  width: 200px;
+  height: 400px;
+  pointer-events: auto;
+}
