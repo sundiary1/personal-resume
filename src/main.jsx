@@ -29,8 +29,10 @@ function mountShapeGrid() {
   );
 }
 
-/* Lanyard — 右上角工牌，拉动返回顶部 */
+/* Lanyard — 右上角工牌，拉动返回顶部（仅桌面端） */
 function mountLanyard() {
+  if (window.innerWidth < 768) return;
+
   const mount = document.createElement('div');
   mount.style.cssText = 'position:fixed;top:0;right:0;z-index:30;';
   document.body.appendChild(mount);
