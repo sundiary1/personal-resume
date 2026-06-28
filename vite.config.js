@@ -22,6 +22,11 @@ export default defineConfig({
         if (!existsSync(newAssetsDir)) mkdirSync(newAssetsDir, { recursive: true });
         const srcNewAssets = 'assets/新素材';
         if (existsSync(srcNewAssets)) cpSync(srcNewAssets, newAssetsDir, { recursive: true });
+
+        // Copy profile images for Lanyard component
+        const profileDir = 'dist/assets/profile';
+        if (!existsSync(profileDir)) mkdirSync(profileDir, { recursive: true });
+        if (existsSync('assets/profile')) cpSync('assets/profile', profileDir, { recursive: true });
       },
     },
   ],
