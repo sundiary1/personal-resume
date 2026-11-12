@@ -24,11 +24,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .hero > .hero-copy, .hero > .hero-profile, .hero > .hero-index { position: relative; z-index: 1; }
 .hero-copy { max-width: 760px; }
 .hero-eyebrow { font-size: 11px; margin-bottom: 32px; letter-spacing: .17em; }
-.hero-name { font-size: clamp(66px, 7.2vw, 108px); line-height: 1; }
+.hero-name { font-size: clamp(80px, 9vw, 132px); line-height: 1; }
 .hero-name-en { display: inline-block; margin-left: 24px; vertical-align: middle; font: 12px var(--font-ui); letter-spacing: .19em; color: var(--muted); }
-.hero-role { margin: 26px 0 0; font: 500 14px/1.6 var(--font-ui); color: var(--portfolio-green); letter-spacing: .08em; }
-.hero-statement { margin: 22px 0 0; font-size: clamp(30px, 3.5vw, 50px); line-height: 1.5; letter-spacing: -.025em; }
-.hero-subtitle { max-width: 530px; font-size: 14px; line-height: 1.95; margin-top: 20px; }
+.hero-subtitle { max-width: 530px; font-size: 14px; line-height: 1.95; margin-top: 32px; }
 .hero-actions { display: flex; gap: 30px; align-items: center; margin-top: 30px; }
 .portfolio-button { display: inline-flex; justify-content: space-between; align-items: center; gap: 38px; background: var(--portfolio-green); color: white; padding: 15px 22px; font: 13px/1.5 var(--font-ui); transition: background 200ms, transform 200ms; }
 .portfolio-button:hover { background: #426151; transform: translateY(-2px); }
@@ -54,7 +52,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 .case-subtitle { margin: 15px 0 0; font: 14px/1.8 var(--font-ui); color: var(--muted); }
 .case-role { flex-shrink: 0; margin: 0 0 2px; font: 12px/1.9 var(--font-ui); text-align: right; color: var(--muted); }
 .case-cover { position: relative; display: block; width: 100%; margin: 0; padding: 0; overflow: hidden; border: 1px solid var(--portfolio-rule); border-radius: 4px; background: #e3eae4; cursor: zoom-in; }
-.case-cover img { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; object-position: center; transition: transform 600ms ease; }
+.case-cover img { width: 100%; height: auto; object-fit: contain; object-position: center; transition: transform 600ms ease; }
 .case-cover:hover img { transform: scale(1.015); }
 .cover-caption { display: flex; justify-content: space-between; align-items: center; position: absolute; right: 18px; bottom: 18px; padding: 11px 15px; background: rgba(253,253,251,.94); color: var(--portfolio-green); font: 11px/1.5 var(--font-ui); gap: 24px; border-radius: 3px; }
 .case-facts { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 30px 0; border-bottom: 1px solid var(--portfolio-rule); }
@@ -106,8 +104,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   .hero-eyebrow { font-size: 9px; margin-bottom: 25px; }
   .hero-name { font-size: 66px; }
   .hero-name-en { display: inline-block; margin-left: 16px; font-size: 10px; }
-  .hero-role { font-size: 12px; margin-top: 24px; }
-  .hero-statement { font-size: clamp(28px, 7vw, 43px); margin-top: 16px; }
   .hero-subtitle { font-size: 13px; max-width: 100%; }
   .hero-profile { grid-column: 2; grid-row: 2; max-width: 130px; }
   .hero-profile figcaption { font-size: 9px; margin-top: 10px; }
@@ -128,7 +124,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   .case-subtitle { font-size: 13px; }
   .case-role { text-align: left; margin-top: 16px; line-height: 1.8; }
   .cover-caption { position: static; padding: 10px 12px; background: #f3f5f0; text-align: left; font-size: 10px; }
-  .case-cover img { aspect-ratio: 3 / 2; object-fit: contain; background: #f3f5f0; }
+  .case-cover img { background: #f3f5f0; }
   .case-facts { padding: 22px 0; }
   .case-facts p { padding: 0 12px; }
   .case-facts strong { font-size: clamp(21px, 6vw, 30px); }
