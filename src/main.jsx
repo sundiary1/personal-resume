@@ -42,7 +42,7 @@ function mountLanyard() {
       position: [0, 0, 15],
       gravity: [0, -15, 0],
       fov: 26,
-      frontImage: './assets/profile/zhou-tian-profile.jpg',
+      frontImage: './assets/profile/avatar-cat.jpg',
       imageFit: 'cover',
       lanyardWidth: 0.8,
       onPull: () => {
