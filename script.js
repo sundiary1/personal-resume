@@ -334,6 +334,45 @@ viewer.addEventListener("close", () => {
   nextBtn.addEventListener("click", () => goTo(current + 1));
 })();
 
+/* ───── 项目截图：独立的手动切换画廊 ───── */
+document.querySelectorAll('[data-project-gallery]').forEach((gallery) => {
+  const slides = Array.from(gallery.querySelectorAll('.project-slide'));
+  const thumbnails = Array.from(gallery.querySelectorAll('[data-gallery-index]'));
+  const caption = gallery.querySelector('[data-gallery-caption]');
+  const count = gallery.querySelector('[data-gallery-count]');
+  let current = 0;
+
+  function goTo(index) {
+    const focusedSlide = slides[current].contains(document.activeElement);
+    current = (index + slides.length) % slides.length;
+    slides.forEach((slide, i) => { slide.hidden = i !== current; });
+    thumbnails.forEach((thumbnail, i) => {
+      thumbnail.setAttribute('aria-pressed', String(i === current));
+    });
+    caption.textContent = slides[current].dataset.caption;
+    count.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    if (focusedSlide) slides[current].focus({ preventScroll: true });
+  }
+
+  thumbnails.forEach((thumbnail, i) => {
+    thumbnail.addEventListener('click', () => goTo(i));
+  });
+  gallery.querySelector('[data-gallery-prev]').addEventListener('click', () => goTo(current - 1));
+  gallery.querySelector('[data-gallery-next]').addEventListener('click', () => goTo(current + 1));
+  gallery.addEventListener('keydown', (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    let index;
+    if (event.key === 'ArrowLeft') index = current - 1;
+    else if (event.key === 'ArrowRight') index = current + 1;
+    else if (event.key === 'Home') index = 0;
+    else if (event.key === 'End') index = slides.length - 1;
+    else return;
+    event.preventDefault();
+    goTo(index);
+    if (event.target.closest('[data-gallery-index]')) thumbnails[current].focus({ preventScroll: true });
+  });
+});
+
 /* ───── 弧形画廊 ───── */
 (function circularGallery() {
   const gallery = document.querySelector(".circular-gallery");

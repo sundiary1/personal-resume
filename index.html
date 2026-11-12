@@ -120,26 +120,57 @@
             <div><p class="case-category">CASE 01 · AI COMPANION</p><h3 id="mind-island-heading">心屿 <em>Mind Island</em></h3><p class="case-subtitle">让心理支持，从一次轻松的参与开始。</p></div>
           </div>
           <div class="case-layout">
-          <button class="case-cover" type="button" data-full="./assets/projects/mind-island-map.webp" data-title="心屿 · 3D 群岛与功能入口" aria-label="放大查看心屿群岛界面">
-            <img src="./assets/projects/mind-island-map.webp" alt="心屿产品实机：通过 3D 群岛进入沙盘、绘画、正念、日记与互动故事" width="1440" height="900" loading="lazy" />
-            <span class="cover-caption">3D 群岛 · 多场景心理自助体验 <span aria-hidden="true">↗</span></span>
-          </button>
+          <div class="project-gallery" data-project-gallery role="region" aria-label="心屿项目截图">
+            <div class="project-slides">
+              <button id="mind-island-slide-1" class="case-cover project-slide" type="button" data-full="./assets/projects/mind-island-map.webp" data-title="心屿 · 3D 群岛与功能入口" data-caption="群岛导航" aria-label="放大查看心屿 · 群岛导航">
+                <img src="./assets/projects/mind-island-map.webp" alt="心屿 · 3D 群岛与功能入口" width="1440" height="900" loading="lazy" />
+              </button>
+              <button id="mind-island-slide-2" class="case-cover project-slide" type="button" data-full="./assets/projects/mind-island-agent.webp" data-title="心屿 · 沙盘 AI 操作预览与确认" data-caption="AI 沙盘" aria-label="放大查看心屿 · AI 沙盘" hidden>
+                <img src="./assets/projects/mind-island-agent.webp" alt="心屿 · 沙盘 AI 操作预览与确认" width="1440" height="1000" loading="lazy" />
+              </button>
+              <button id="mind-island-slide-3" class="case-cover project-slide" type="button" data-full="./assets/projects/mind-island-drawing.webp" data-title="心屿 · 曼陀罗自由涂色界面" data-caption="曼陀罗绘画" aria-label="放大查看心屿 · 曼陀罗绘画" hidden>
+                <img src="./assets/projects/mind-island-drawing.webp" alt="心屿 · 曼陀罗自由涂色界面" width="1440" height="1000" loading="lazy" />
+              </button>
+              <button id="mind-island-slide-4" class="case-cover project-slide" type="button" data-full="./assets/projects/mind-island-mindfulness.webp" data-title="心屿 · 正念 AI 陪伴与音乐播放" data-caption="林屿正念" aria-label="放大查看心屿 · 林屿正念" hidden>
+                <img src="./assets/projects/mind-island-mindfulness.webp" alt="心屿 · 正念 AI 陪伴与音乐播放" width="1440" height="960" loading="lazy" />
+              </button>
+              <button id="mind-island-slide-5" class="case-cover project-slide" type="button" data-full="./assets/projects/mind-island-journal.webp" data-title="心屿 · 情绪记录与心情日历" data-caption="情绪日记" aria-label="放大查看心屿 · 情绪日记" hidden>
+                <img src="./assets/projects/mind-island-journal.webp" alt="心屿 · 情绪记录与心情日历" width="1440" height="900" loading="lazy" />
+              </button>
+            </div>
+            <div class="gallery-toolbar">
+              <div class="gallery-status" role="status" aria-live="polite" aria-atomic="true">
+                <span data-gallery-caption>群岛导航</span><span class="gallery-count" data-gallery-count>01 / 05</span>
+              </div>
+              <div class="gallery-arrows">
+                <button class="gallery-arrow" type="button" data-gallery-prev aria-label="心屿上一张截图"><span aria-hidden="true">←</span></button>
+                <button class="gallery-arrow" type="button" data-gallery-next aria-label="心屿下一张截图"><span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <div class="gallery-thumbnails" role="group" aria-label="选择心屿截图">
+              <button class="gallery-thumbnail" type="button" data-gallery-index="0" aria-label="查看心屿群岛导航截图" aria-pressed="true" aria-controls="mind-island-slide-1">
+                <img src="./assets/projects/mind-island-map.webp" alt="" width="88" height="58" loading="lazy" /><span>群岛导航</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="1" aria-label="查看心屿AI 沙盘截图" aria-pressed="false" aria-controls="mind-island-slide-2">
+                <img src="./assets/projects/mind-island-agent.webp" alt="" width="88" height="58" loading="lazy" /><span>AI 沙盘</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="2" aria-label="查看心屿曼陀罗绘画截图" aria-pressed="false" aria-controls="mind-island-slide-3">
+                <img src="./assets/projects/mind-island-drawing.webp" alt="" width="88" height="58" loading="lazy" /><span>曼陀罗绘画</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="3" aria-label="查看心屿林屿正念截图" aria-pressed="false" aria-controls="mind-island-slide-4">
+                <img src="./assets/projects/mind-island-mindfulness.webp" alt="" width="88" height="58" loading="lazy" /><span>林屿正念</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="4" aria-label="查看心屿情绪日记截图" aria-pressed="false" aria-controls="mind-island-slide-5">
+                <img src="./assets/projects/mind-island-journal.webp" alt="" width="88" height="58" loading="lazy" /><span>情绪日记</span>
+              </button>
+            </div>
+          </div>
           <div class="case-overview">
           <div class="case-story" data-reveal>
             <div><span class="story-label">发现需求</span><h4>从“难以开口”出发</h4><p>结合 841 篇公开文本的主题分析与心理学背景，梳理倾诉、隐私和自助活动等需求线索，将降低表达门槛作为产品设计切入点。</p></div>
             <div><span class="story-label">设计体验</span><h4>把陪伴融入活动</h4><p>用 3D 群岛串联沙盘、绘画、正念、日记与互动故事。用户既能直接对话，也能先参与活动，再按自己的节奏获得 AI 回应。</p></div>
             <div><span class="story-label">实现与迭代</span><h4>让 AI 的行为可理解</h4><p>落地流式对话与分场景提示词；沙盘操作先预览、确认后执行，支持撤销。结合真实模型测试和桌面、手机体验检查持续调整。</p></div>
           </div>
-          <details class="case-details">
-            <summary>展开项目细节 <span>AI 交互设计与产品截图 <b aria-hidden="true">＋</b></span></summary>
-            <div class="case-detail-body">
-              <div class="detail-feature">
-                <button class="detail-screenshot" type="button" data-full="./assets/projects/mind-island-agent.webp" data-title="心屿 · 沙盘 AI 操作预览与确认" aria-label="放大沙盘 AI 协作界面"><img src="./assets/projects/mind-island-agent.webp" alt="AI 根据添加小羊的请求生成操作预览，用户确认后才执行" width="1440" height="1000" loading="lazy" /></button>
-                <div><p class="case-category">AI INTERACTION</p><h4>从一句话，到一次可控操作。</h4><p>沙盘助手能理解添加、移动与移除意图，将建议转为可确认的操作卡片。多件操作支持整批预览、确认和撤销。</p><p>对话、正念与日记使用各自的场景规则；长期记忆由用户主动开启，日记草稿也需要确认保存。</p><ul class="case-tags"><li>场景提示词</li><li>Agent 工具调用</li><li>预览与确认</li><li>体验验证</li></ul></div>
-              </div>
-              <div class="case-next"><span class="story-label">运营验证思路</span><p>围绕“进入群岛 → 首次参与活动 → 完成一次体验 → 再次访问”设计观察路径；重点了解入口理解、AI 回应帮助度和中途退出原因，为后续用户访谈与版本迭代提供依据。</p></div>
-            </div>
-          </details>
           </div>
           </div>
         </article>
@@ -149,25 +180,51 @@
             <div><p class="case-category">CASE 02 · DATA PRODUCT</p><h3 id="people-dashboard-heading">人力数据看板</h3></div>
           </div>
           <div class="case-layout">
-          <button class="case-cover" type="button" data-full="./assets/projects/hr-dashboard.webp" data-title="人力数据看板 · 人员总览（虚拟演示数据）" aria-label="放大查看人力数据看板">
-            <img src="./assets/projects/hr-dashboard.webp" alt="人力看板实机，使用虚拟数据展示人员指标、组织结构和人才分布" width="1440" height="960" loading="lazy" />
-            <span class="cover-caption">人员总览 · 虚拟数据演示 <span aria-hidden="true">↗</span></span>
-          </button>
+          <div class="project-gallery" data-project-gallery role="region" aria-label="人力数据看板项目截图">
+            <div class="project-slides">
+              <button id="people-dashboard-slide-1" class="case-cover project-slide" type="button" data-full="./assets/projects/hr-dashboard.webp" data-title="人力数据看板 · 人员指标与人才分布（虚拟数据）" data-caption="人员总览" aria-label="放大查看人力数据看板 · 人员总览">
+                <img src="./assets/projects/hr-dashboard.webp" alt="人力数据看板 · 人员指标与人才分布（虚拟数据）" width="1440" height="960" loading="lazy" />
+              </button>
+              <button id="people-dashboard-slide-2" class="case-cover project-slide" type="button" data-full="./assets/projects/hr-organization.webp" data-title="人力数据看板 · 组织架构与部门关系（虚拟数据）" data-caption="组织概览" aria-label="放大查看人力数据看板 · 组织概览" hidden>
+                <img src="./assets/projects/hr-organization.webp" alt="人力数据看板 · 组织架构与部门关系（虚拟数据）" width="1440" height="960" loading="lazy" />
+              </button>
+              <button id="people-dashboard-slide-3" class="case-cover project-slide" type="button" data-full="./assets/projects/hr-attendance.webp" data-title="人力数据看板 · 考勤趋势与部门明细（虚拟数据）" data-caption="考勤分析" aria-label="放大查看人力数据看板 · 考勤分析" hidden>
+                <img src="./assets/projects/hr-attendance.webp" alt="人力数据看板 · 考勤趋势与部门明细（虚拟数据）" width="1440" height="960" loading="lazy" />
+              </button>
+              <button id="people-dashboard-slide-4" class="case-cover project-slide" type="button" data-full="./assets/projects/hr-data-management.webp" data-title="人力数据看板 · 业务数据维护与 Excel 导入（虚拟数据）" data-caption="数据管理" aria-label="放大查看人力数据看板 · 数据管理" hidden>
+                <img src="./assets/projects/hr-data-management.webp" alt="人力数据看板 · 业务数据维护与 Excel 导入（虚拟数据）" width="1440" height="960" loading="lazy" />
+              </button>
+            </div>
+            <div class="gallery-toolbar">
+              <div class="gallery-status" role="status" aria-live="polite" aria-atomic="true">
+                <span data-gallery-caption>人员总览</span><span class="gallery-count" data-gallery-count>01 / 04</span>
+              </div>
+              <div class="gallery-arrows">
+                <button class="gallery-arrow" type="button" data-gallery-prev aria-label="人力数据看板上一张截图"><span aria-hidden="true">←</span></button>
+                <button class="gallery-arrow" type="button" data-gallery-next aria-label="人力数据看板下一张截图"><span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <div class="gallery-thumbnails" role="group" aria-label="选择人力数据看板截图">
+              <button class="gallery-thumbnail" type="button" data-gallery-index="0" aria-label="查看人力数据看板人员总览截图" aria-pressed="true" aria-controls="people-dashboard-slide-1">
+                <img src="./assets/projects/hr-dashboard.webp" alt="" width="88" height="58" loading="lazy" /><span>人员总览</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="1" aria-label="查看人力数据看板组织概览截图" aria-pressed="false" aria-controls="people-dashboard-slide-2">
+                <img src="./assets/projects/hr-organization.webp" alt="" width="88" height="58" loading="lazy" /><span>组织概览</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="2" aria-label="查看人力数据看板考勤分析截图" aria-pressed="false" aria-controls="people-dashboard-slide-3">
+                <img src="./assets/projects/hr-attendance.webp" alt="" width="88" height="58" loading="lazy" /><span>考勤分析</span>
+              </button>
+              <button class="gallery-thumbnail" type="button" data-gallery-index="3" aria-label="查看人力数据看板数据管理截图" aria-pressed="false" aria-controls="people-dashboard-slide-4">
+                <img src="./assets/projects/hr-data-management.webp" alt="" width="88" height="58" loading="lazy" /><span>数据管理</span>
+              </button>
+            </div>
+          </div>
           <div class="case-overview">
           <div class="case-story" data-reveal>
             <div><span class="story-label">业务问题</span><p>围绕人员、招聘、绩效与考勤等场景梳理字段和指标口径，以工号和组织层级连接多类数据，为跨表查看提供基础。</p></div>
             <div><span class="story-label">产品方案</span><p>组织与人员总览呈现整体情况，招聘、人才和考勤页面承接具体分析；支持按部门筛选、查看明细，让不同问题有对应入口。</p></div>
             <div><span class="story-label">落地能力</span><p>实现 Excel 导入预览、字段与工号提示、记录维护和导出。</p></div>
           </div>
-          <details class="case-details">
-            <summary>展开项目细节 <span>数据流程与使用场景 <b aria-hidden="true">＋</b></span></summary>
-            <div class="case-detail-body">
-              <div class="detail-feature">
-                <button class="detail-screenshot" type="button" data-full="./assets/projects/hr-data-management.webp" data-title="人力看板 · 数据管理（虚拟演示数据）" aria-label="放大数据管理界面"><img src="./assets/projects/hr-data-management.webp" alt="数据管理界面，统一维护业务表并提供 Excel 导入和导出入口，内容为虚拟演示数据" width="1440" height="960" loading="lazy" /></button>
-                <div><p class="case-category">DATA OPERATIONS</p><h4>让数据能够持续维护。</h4><p>将数据准备、导入检查、确认写入与看板刷新串成完整流程，关注重复工号、日期格式与字段缺失等实际维护问题。</p><p>从平台版延伸到可独立运行的本地版本，保留业务字段和统计逻辑，便于使用 Excel 进行迁移和演示。</p><ul class="case-tags"><li>指标口径</li><li>数据可视化</li><li>Excel 导入校验</li><li>业务流程</li></ul></div>
-              </div>
-            </div>
-          </details>
           </div>
           </div>
         </article>
