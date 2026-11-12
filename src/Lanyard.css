@@ -3,7 +3,13 @@
   top: 0;
   right: 0;
   z-index: 30;
-  width: 200px;
-  height: 400px;
+  width: 150px;
+  height: 300px;
   pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .lanyard-wrapper {
+    display: none;
+  }
 }
