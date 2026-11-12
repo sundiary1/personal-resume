@@ -27,6 +27,10 @@ export default defineConfig({
         const profileDir = 'dist/assets/profile';
         if (!existsSync(profileDir)) mkdirSync(profileDir, { recursive: true });
         if (existsSync('assets/profile')) cpSync('assets/profile', profileDir, { recursive: true });
+
+        // Keep lightbox URLs stable alongside Vite's optimized image URLs.
+        const projectsDir = 'dist/assets/projects';
+        if (existsSync('assets/projects')) cpSync('assets/projects', projectsDir, { recursive: true });
       },
     },
   ],
